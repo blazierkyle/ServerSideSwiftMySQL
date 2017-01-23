@@ -34,9 +34,17 @@ drop.get { req in
 drop.get("squareMe") { request in
     guard let intValue = request.data["number"]?.int else {
         
-        return "Oops... You didn't provide a valid integer to be squared! Try using the end of the URL to be something like: 'squareMe?number=2'"
+        return try JSON(node: ["Error" : "Oops... You didn't provide a valid integer to be squared! Try using the end of the URL to be something like: 'squareMe?number=2'"])
+        
     }
-    return "You provided the number \(intValue), which when squared becomes: \(intValue * intValue)"
+    
+    do {
+        return try JSON(node: ["Success" : "You provided the number \(intValue), which when squared becomes: \(intValue * intValue)"])
+    } catch {
+        return try JSON(node: ["Error" : "Oops... the integer you entered was too large, please try a smaller one."])
+
+    }
+    
 }
 
 /// MARK: - Connecting to a MySQL DB using a tutorial
